@@ -1,19 +1,42 @@
-import React, { useState } from 'react'
-import data from './data.json'
-import './App.css'
+import React, { useState } from 'react';
+//mock data
+import data from "./data.json";
 //components
-import Header from './Components/Header'
-import ToDoList from './Components/ToDoList'
+import Header from "./Header";
+import ToDoList from "./ToDoList";
+import ToDoForm from './ToDoForm';
 
-const App = () => {
-  //hook
-  const [toDoList, setToDoList] = useState(data)
+function App() {
+  
+  const [ toDoList, setToDoList ] = useState(data);
+
+  const handleToggle = (id) => {
+    let mapped = toDoList.map(task => {
+      return task.id === Number(id) ? { ...task, complete: !task.complete } : { ...task};
+    });
+    setToDoList(mapped);
+  }
+
+  const handleFilter = () => {
+    let filtered = toDoList.filter(task => {
+      return !task.complete;
+    });
+    setToDoList(filtered);
+  }
+
+  const addTask = (userInput ) => {
+    let copy = [...toDoList];
+    copy = [...copy, { id: toDoList.length + 1, task: userInput, complete: false }];
+    setToDoList(copy);
+  }
+
   return (
-    <div className='app'>
+    <div className="App">
       <Header />
-      <ToDoList toDoList={toDoList} />
+      <ToDoList toDoList={toDoList} handleToggle={handleToggle} handleFilter={handleFilter}/>
+      <ToDoForm addTask={addTask}/>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
